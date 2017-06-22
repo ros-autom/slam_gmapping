@@ -253,18 +253,36 @@ void SlamGMapping::init()
 }
 
 
-void SlamGMapping::startLiveSlam()
+
+
+void SlamGMapping::startLiveSlam1()
 {
   entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
-  sst_ = node_.advertise<nav_msgs::OccupancyGrid>("map", 1, true);
+  sst_ = node_.advertise<nav_msgs::OccupancyGrid>("Husky_h1/map", 1, true);
   sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
-  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "scan", 5);
+  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h1_scan", 5);
   scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
   scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
 
   transform_thread_ = new boost::thread(boost::bind(&SlamGMapping::publishLoop, this, transform_publish_period_));
 }
+
+void SlamGMapping::startLiveSlam2()
+{
+  entropy_publisher_ = private_nh_.advertise<std_msgs::Float64>("entropy", 1, true);
+  sst_ = node_.advertise<nav_msgs::OccupancyGrid>("Husky_h2/map", 1, true);
+  sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
+  ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
+  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h2_scan", 5);
+  scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
+  scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
+
+  transform_thread_ = new boost::thread(boost::bind(&SlamGMapping::publishLoop, this, transform_publish_period_));
+}
+
+
+
 
 void SlamGMapping::startReplay(const std::string & bag_fname, std::string scan_topic)
 {
@@ -364,6 +382,7 @@ SlamGMapping::~SlamGMapping()
   if (scan_filter_sub_)
     delete scan_filter_sub_;
 }
+
 
 bool
 SlamGMapping::getOdomPose(GMapping::OrientedPoint& gmap_pose, const ros::Time& t)

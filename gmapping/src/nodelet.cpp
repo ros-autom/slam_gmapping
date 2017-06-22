@@ -29,14 +29,20 @@ class SlamGMappingNodelet : public nodelet::Nodelet
   
     virtual void onInit()
     {
+    	std::cout<<"EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE"<<std::endl;
       NODELET_INFO_STREAM("Initialising Slam GMapping nodelet...");
-      sg_.reset(new SlamGMapping(getNodeHandle(), getPrivateNodeHandle()));
+      sg_1.reset(new SlamGMapping(getNodeHandle(), getPrivateNodeHandle()));
+      sg_2.reset(new SlamGMapping(getNodeHandle(), getPrivateNodeHandle()));
       NODELET_INFO_STREAM("Starting live SLAM...");
-      sg_->startLiveSlam();
+      sg_1->startLiveSlam1();
+      sg_2->startLiveSlam2();
+      
+      
     }
 
   private:  
-    boost::shared_ptr<SlamGMapping> sg_;
+    boost::shared_ptr<SlamGMapping> sg_1;
+    boost::shared_ptr<SlamGMapping> sg_2;
 };
 
 PLUGINLIB_EXPORT_CLASS(SlamGMappingNodelet, nodelet::Nodelet)

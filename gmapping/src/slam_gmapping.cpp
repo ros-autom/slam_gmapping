@@ -261,7 +261,7 @@ void SlamGMapping::startLiveSlam1()
   sst_ = node_.advertise<nav_msgs::OccupancyGrid>("Husky_h1/map", 1, true);
   sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
-  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h1_scan", 5);
+  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h1/scan", 5);
   scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
   scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
 
@@ -274,7 +274,7 @@ void SlamGMapping::startLiveSlam2()
   sst_ = node_.advertise<nav_msgs::OccupancyGrid>("Husky_h2/map", 1, true);
   sstm_ = node_.advertise<nav_msgs::MapMetaData>("map_metadata", 1, true);
   ss_ = node_.advertiseService("dynamic_map", &SlamGMapping::mapCallback, this);
-  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h2_scan", 5);
+  scan_filter_sub_ = new message_filters::Subscriber<sensor_msgs::LaserScan>(node_, "h2/scan", 5);
   scan_filter_ = new tf::MessageFilter<sensor_msgs::LaserScan>(*scan_filter_sub_, tf_, odom_frame_, 5);
   scan_filter_->registerCallback(boost::bind(&SlamGMapping::laserCallback, this, _1));
 
